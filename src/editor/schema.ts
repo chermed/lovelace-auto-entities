@@ -14,6 +14,7 @@ const ruleKeySelector = {
     ["hidden_by", "Hidden by"],
     ["integration", "Integration"],
     ["label", "Label"],
+    ["labels", "Labels (all of)"],
     ["last_changed", "Last Changed"],
     ["last_triggered", "Last Triggered"],
     ["last_updated", "Last Updated"],
@@ -34,6 +35,7 @@ const filterValueSelector = {
   group: { entity: { filter: { domain: "group" } } },
   integration: { config_entry: {} },
   label: { label: {} },
+  labels: { label: { multiple: true } },
 };
 
 export const hasSelector = (filter) => {

@@ -31,6 +31,9 @@ interface FilterConfig {
   integration?: string;
   hidden_by?: string;
 
+  label?: string;
+  labels?: string[];
+
   not?: FilterConfig;
   or?: FilterConfig[];
 

@@ -1,0 +1,16 @@
+# Test for labels filter
+
+title: Labels filter
+
+description: Test that the labels filter includes entities with any of the specified labels.
+
+cards:
+  - type: custom:auto-entities
+    card:
+      type: entities
+      title: Entities with label "Test Label" or "Another Label"
+    filter:
+      include:
+        - labels:
+            - Test Label
+            - Another Label

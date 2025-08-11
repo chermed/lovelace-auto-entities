@@ -249,15 +249,36 @@ export const RULES: Record<
 
     return (entity) => {
       const ent = entities.find((e) => e.entity_id === entity.entity_id);
-
       if (!ent) return false;
       if (!ent.labels) return false;
       if (ent.labels.some(match_label)) return true;
-
       const dev = devices.find((d) => d.id === ent.device_id);
       if (!dev) return false;
       return dev.labels.some(match_label);
     };
+  },
+
+  labels: async (hass, value) => {
+    // value: array of label ids or names
+    const [entities, devices, labels] = await Promise.all([
+      getEntities(hass),
+      getDevices(hass),
+      getLabels(hass),
+    ]);
+    // Normalize value to array of label ids
+    const labelIds = value.map((v) => {
+      const found = labels.find((l) => l.label_id === v || l.name === v);
+      return found ? found.label_id : v;
+    });
+    return (entity) => {
+      const ent = entities.find((e) => e.entity_id === entity.entity_id);
+      if (!ent) return false;
+      if (ent.labels && ent.labels.some((lbl) => labelIds.includes(lbl))) return true;
+      const dev = devices.find((d) => d.id === ent.device_id);
+      if (!dev) return false;
+      return dev.labels && dev.labels.some((lbl) => labelIds.includes(lbl));
+    };
+  },
   },
 };
 
