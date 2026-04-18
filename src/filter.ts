@@ -233,6 +233,26 @@ export const RULES: Record<
     };
   },
   label: async (hass, value) => {
+    const [match, entities, labels] = await Promise.all([
+      matcher(value),
+      getEntities(hass),
+      getLabels(hass),
+    ]);
+
+    const match_label = (lbl) => {
+      if (match(lbl)) return true;
+      const label = labels[lbl];
+      return match(label?.name);
+    };
+
+    return (entity) => {
+      const ent = entities[entity.entity_id];
+
+      if (!ent) return false;
+      return ent.labels?.some(match_label);
+    };
+  },
+  device_label: async (hass, value) => {
     const [match, entities, devices, labels] = await Promise.all([
       matcher(value),
       getEntities(hass),
@@ -250,12 +270,9 @@ export const RULES: Record<
       const ent = entities[entity.entity_id];
 
       if (!ent) return false;
-      if (!ent.labels) return false;
-      if (ent.labels.some(match_label)) return true;
-
       const dev = devices[ent.device_id];
       if (!dev) return false;
-      return dev.labels.some(match_label);
+      return dev.labels?.some(match_label);
     };
   },
 };

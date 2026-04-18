@@ -20,6 +20,7 @@ interface FilterConfig {
   device?: string;
   device_manufacturer?: string;
   device_model?: string;
+  device_label?: string;
 
   attributes?: Record<string, string>;
 

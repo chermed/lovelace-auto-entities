@@ -6,6 +6,7 @@ const ruleKeySelector = {
     ["area", "Area"],
     ["attributes", "Attribute"],
     ["device", "Device"],
+    ["device_label", "Device Label"],
     ["domain", "Domain"],
     ["entity_category", "Entity Category"],
     ["entity_id", "Entity ID"],
@@ -35,6 +36,7 @@ const filterValueSelector = {
   group: { entity: { filter: { domain: "group" } } },
   integration: { config_entry: {} },
   label: { label: {} },
+  device_label: { label: {} },
 };
 
 export const hasSelector = (filter) => {

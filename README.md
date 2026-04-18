@@ -65,6 +65,7 @@ Each filter has a set of rules and will match entities which match **ALL** rules
 | `level`               | Entities on a given level.                                                                  | `2`, `>1`                                            |
 | `device`              | Entities belonging to a Device                                                              | `Thomas iPhone`                                      |
 | `label`               | Entities that are tagged with a certain label                                               | `Show on dashboard`, `Holiday light`                 |
+| `device_label`        | Entities belonging to a device with a certain label                                         | `Show on dashboard`, `Holiday light`                 |
 | `device_manufacturer` | Entities belonging to a device by a given manufacturer                                      | `IKEA`                                               |
 | `device_model`        | Entities belonging to a device of a given model                                             | `Hue white ambiance E26/E27 (8718696548738)`         |
 | `integration`         | Entities included by a given integration. This is not possible for _all_ integrations.      | `plex`, `input_boolean`, `xiaomi_miio`, `mobile_app` |
@@ -339,6 +340,7 @@ card:
 filter:
   include:
     - device: /iPhone/
+    - device_label: "Personal Device"
 ```
 
 List the five last triggered motion sensors:
