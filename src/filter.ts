@@ -247,13 +247,8 @@ export const RULES: Record<
 
     return (entity) => {
       const ent = entities[entity.entity_id];
-
       if (!ent) return false;
-      if (ent.labels?.some(match_label)) return true;
-
-      const dev = devices[ent.device_id];
-      if (!dev) return false;
-      return dev.labels?.some(match_label);
+      return ent.labels?.some(match_label);
     };
   },
   device_label: async (hass, value) => {
@@ -272,7 +267,6 @@ export const RULES: Record<
 
     return (entity) => {
       const ent = entities[entity.entity_id];
-
       if (!ent) return false;
       const dev = devices[ent.device_id];
       if (!dev) return false;
@@ -292,16 +286,24 @@ export async function get_filter(
         return RULES[rule]?.(hass, value) ?? (() => false);
       })
     )
-  )
-    .filter((r) => r !== undefined)
-    .filter(Boolean);
+  ).filter(Boolean);
 
-  return (entity: string | LovelaceRowConfig) => {
-    if (!rules.length) return false;
-    if (typeof entity !== "string") entity = entity.entity;
-    if (!entity) return false;
-    const hass_entity = hass?.states?.[entity];
-    if (!hass_entity) return false;
-    return rules.every((x) => x(hass_entity));
+  return (entity_id: string | LovelaceRowConfig) => {
+    let entity: HAState;
+    if (typeof entity_id === "string") {
+      entity = hass.states[entity_id];
+      if (!entity) entity = { entity_id, state: "unknown", last_changed: 0, last_updated: 0 };
+    } else {
+      entity = hass.states[entity_id.entity];
+      if (!entity)
+        entity = {
+          entity_id: entity_id.entity,
+          state: "unknown",
+          last_changed: 0,
+          last_updated: 0,
+        };
+    }
+
+    return rules.every((rule) => rule(entity));
   };
 }
