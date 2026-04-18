@@ -249,7 +249,11 @@ export const RULES: Record<
       const ent = entities[entity.entity_id];
 
       if (!ent) return false;
-      return ent.labels?.some(match_label);
+      if (ent.labels?.some(match_label)) return true;
+
+      const dev = devices[ent.device_id];
+      if (!dev) return false;
+      return dev.labels?.some(match_label);
     };
   },
   device_label: async (hass, value) => {
