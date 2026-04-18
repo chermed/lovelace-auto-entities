@@ -1,3 +1,4 @@
+// BUILD_ID: 123456789
 import { HAState, HassObject, LovelaceRowConfig } from "./types";
 import {
   getAreas,
@@ -233,8 +234,19 @@ export const RULES: Record<
     };
   },
   label: async (hass, value) => {
+    let pattern = value;
+    if (
+      typeof value === "string" &&
+      !value.startsWith("/") &&
+      !value.includes("*") &&
+      !value.includes("ago") &&
+      !/[<>=!]/.test(value)
+    ) {
+      pattern = `/${value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/i`;
+    }
+
     const [match, entities, labels] = await Promise.all([
-      matcher(value),
+      matcher(pattern),
       getEntities(hass),
       getLabels(hass),
     ]);
@@ -252,8 +264,19 @@ export const RULES: Record<
     };
   },
   device_label: async (hass, value) => {
+    let pattern = value;
+    if (
+      typeof value === "string" &&
+      !value.startsWith("/") &&
+      !value.includes("*") &&
+      !value.includes("ago") &&
+      !/[<>=!]/.test(value)
+    ) {
+      pattern = `/${value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/i`;
+    }
+
     const [match, entities, devices, labels] = await Promise.all([
-      matcher(value),
+      matcher(pattern),
       getEntities(hass),
       getDevices(hass),
       getLabels(hass),
